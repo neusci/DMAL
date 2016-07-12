@@ -1,0 +1,25 @@
+*.sc
+*.class
+*.log
+
+# no data files, no figures
+*.txt
+*.dat
+*.eps
+*.jpg
+*.png
+
+# sbt specific
+.cache
+.history
+.lib/
+dist/*
+target/
+lib_managed/
+src_managed/
+project/boot/
+project/plugins/project/
+
+# Scala-IDE specific
+.scala_dependencies
+.worksheet
