@@ -25,6 +25,8 @@ import java.io.PrintWriter
 case class Init()
 case class Dest()
 case class stim(from: Int, curr:Double, time:Double) // from which neuron, with what current, at what time
+case class Done()
+case class Fail()
 
 class iLN(id: Int) extends Actor {
   val time_step:Double = 0.01 // ms
@@ -97,28 +99,34 @@ class iLN(id: Int) extends Actor {
   }
   def receive() = {
     case Init() =>
-      { println("iLN["+id+"] is ready.")
-        printf("iLN: %3d ; time (mS): %3.3f ; vol. (mV): %3.6f\n", id, time_cur, V)
-        }
+      println("iLN["+id+"] is ready.")
+      printf("iLN: %3d ; time (mS): %3.3f ; vol. (mV): %3.6f\n", id, time_cur, V)
+      sender ! Done()
     case stim(i,x,t) =>
-      { I_app = x
-        iterate()
-        data_writer.println(V)
-        }
+      I_app = x
+      iterate()
+      data_writer.println(V)
+      sender ! Done()
     case Dest() =>
-      { println("iLN["+id+"] is done.")
-        data_writer.close()
-        }
+      println("iLN["+id+"] is done.")
+      data_writer.close()
+      sender ! Done()
+    case _ =>
+      sender ! Fail()
   }
 }
 
 object main extends App {
-  val stagent = ActorSystem("stage-agent-on-akka")
+  val stagent = ActorSystem("agent-on-stage")
   val iLN_test = stagent.actorOf(Props( new iLN(1) ))
+  implicit val timeout = Timeout(1 seconds)
 
-  iLN_test ! Init() // run 1S:
-  for (i <- 1 to 100000) {iLN_test ! stim(0, 0.2, 0)}
-  iLN_test ! Dest()
+  iLN_test ? Init() // run 10S:
+  for (i <- 1 to 1000000) {
+    iLN_test ? stim(0, 0.2, 0)
+    Thread sleep 1
+  }
+  iLN_test ? Dest()
 
   Thread sleep 10000
   stagent shutdown
