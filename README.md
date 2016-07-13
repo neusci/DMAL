@@ -3,7 +3,7 @@
 based on Dori Luli's Ph.D. dissertation:
   `A Neuronal Network Model of Drosophila Antennal Lobe`
 
-- By: Mogei Wang
+- Author: Mogei Wang
 - Language: Scala
 - Editor: Emacs
 - OS: Ubuntu 14.04
