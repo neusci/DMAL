@@ -196,16 +196,16 @@ object main extends App {
 
 /*
  iLN_test ? Init() // run 10S:
-  for (i <- 1 to 100000) {
-    iLN_test ? stim(0, 0.1, 0)
-    Thread sleep 1
-  }
-  iLN_test ? Dest()
+ for (i <- 1 to 100000) {
+   iLN_test ? stim(0, 0.1, 0)
+   Thread sleep 1
+ }
+ iLN_test ? Dest()
 */
 
-  eLN_test ? Init()
+  eLN_test ? Init() // run 10S:
   for (i <- 1 to 1000000) {
-    eLN_test ? stim(0, 2, 0)
+    eLN_test ? stim(0, 0.2, 0)
     Thread sleep 1
   }
   eLN_test ? Dest()
